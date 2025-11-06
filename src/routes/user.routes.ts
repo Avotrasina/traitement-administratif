@@ -7,6 +7,8 @@ router.get('/hello', userController.hello)
 
 router.get('/users', userController.showUsers)
 router.get('/users/:id', userController.getById)
+router.put('/users/:id', userController.updateUser)
+router.delete('/users/:id', userController.deleteUser);
 router.post('/register', userController.createUser)
 router.get('/login', userController.hello)
 

@@ -52,3 +52,17 @@ export async function createUser(user : any) : Promise<User| null> {
 	});
 }
 
+export async function deleteUser(user_id: number): Promise<User | null> {
+	return await prisma.user.delete({
+		where: { id: user_id }
+	});
+}
+
+export async function updateUser(user: any): Promise<User | null> {
+	return await prisma.user.update({
+		data: user,
+		omit: { mot_de_passe: true },
+		where: { id: user.id}
+	});
+}
+
