@@ -1,10 +1,50 @@
 import { Request, Response } from "express";
 import * as userService from './../sevices/userService.js';
 import * as bcrypt from "../utils/bcrypt.js";
+import { generateToken } from "../utils/jwt";
+
+
 export async function hello(req: Request, res: Response) {
   res.send('Hello world !');
 }
 
+// Authenticate the user
+export async function authenticate(req: Request, res: Response) {
+	const { email, mot_de_passe } = req.body;	
+	try {
+		// Verify the payloads
+		if (!email || !mot_de_passe) {
+			return res.status(400).json({ message: 'Email and password are required' });
+		}
+		
+		// Validate email
+		const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+		if (!emailRegex.test(email)) {
+			return res.status(401).json({ message: 'Invalid email' });
+		}
+	
+		const user = await userService.getUserByEmail(email);
+		const mot_de_passe_db = user?.mot_de_passe as string;
+		if (!user) {
+			return res.status(401).json({ message: "Email or password are incorrect" });
+		}
+	
+		// Check if the password match
+		const areMatched = await bcrypt.comparePassword(mot_de_passe, mot_de_passe_db);
+		if (!areMatched) {
+			return res.status(401).json({ message: 'Email or password are incorrect' });
+		}
+		
+		// Logged in
+		const webToken = generateToken(user.id);
+		return res.status(200).json({ webToken });
+		
+	} catch (error) {
+		console.error(error);
+		return res.status(500).json({ message: "Server error" });
+	}
+	
+}
 
 export async function getById(req: Request, res: Response) {
   const user_id: number = Number(req.params.id);
