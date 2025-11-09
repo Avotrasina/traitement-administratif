@@ -1,17 +1,23 @@
 import { Router } from "express";
 import * as userController from "./../controllers/userController.js";
+import { authenticateToken, AuthRequest } from "../middlewares/authMiddleware.js";
 
-const router = Router();
+const userRouter = Router();
 
-router.get('/hello', userController.hello)
+userRouter.get("/hello", authenticateToken, (req: AuthRequest, res) => {
+	res.json({ message: "Welcome", user: req.user });
+});
 
 
 // Routes for users
-router.get('/users', userController.showUsers)
-router.get('/users/:id', userController.getById)
-router.put('/users/:id', userController.updateUser)
-router.delete('/users/:id', userController.deleteUser);
-router.post('/register', userController.createUser)
-router.get('/login', userController.authenticate)
+userRouter.get('/users', userController.showUsers);
+userRouter.get('/users/:id', userController.getById);
+userRouter.put('/users/:id', userController.updateUser);
+userRouter.delete('/users/:id', userController.deleteUser);
+userRouter.post('/register', userController.createUser);
+userRouter.post('/login', userController.authenticate);
+userRouter.post('/logout', userController.logout);
 
-export default router;
+
+
+export default userRouter;

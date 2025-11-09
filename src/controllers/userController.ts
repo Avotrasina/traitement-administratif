@@ -34,7 +34,7 @@ export async function authenticate(req: Request, res: Response) {
 		if (!areMatched) {
 			return res.status(401).json({ message: 'Email or password are incorrect' });
 		}
-		
+
 		// Logged in
 		const webToken = generateToken(user.id);
 		return res.status(200).json({ webToken });
@@ -74,7 +74,8 @@ export async function showUsers(req: Request, res: Response) {
 
 // Create a new user
 export async function createUser(req: Request, res: Response) {
-  const { role } = req.body;
+	const { role } = req.body;
+	console.log(role);
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   if (role === 'admin' || role === 'agent') {
     // validation part
@@ -91,7 +92,8 @@ export async function createUser(req: Request, res: Response) {
       const user = {
         nom,
         prenom,
-        email,
+				email,
+				role,
         mot_de_passe: await bcrypt.hashPassword(mot_de_passe)
       };
       const new_user = await userService.createUser(user);
@@ -162,6 +164,7 @@ export async function updateUser(req: Request, res: Response) {
 				nom,
 				prenom,
 				email,
+				role,
 				mot_de_passe: await bcrypt.hashPassword(mot_de_passe),
 			};
 			const udpated_user = await userService.updateUser(user);
@@ -229,9 +232,11 @@ export async function deleteUser(req: Request, res: Response) {
 }
 
 
-// Update an existing user
-export async function udpateUser(req: Request, res: Response) {
-
+// Logout 
+export async function logout(req: Request, res: Response) {
+	return res.status(200).json({
+		message: 'Logged out successfully'
+	})
 }
 
 

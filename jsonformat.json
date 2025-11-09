@@ -1,0 +1,24 @@
+{
+  "citoyen_id": 1,
+  "type_id": 2,
+  "description": "Demande acte de naissance du petit Nicolas",
+  "statut": "soumise",
+  "qr_code": "https://xnxx.com/live/2025",
+  "remarque": "",  
+  "documents": [
+    { 
+      "nom": "Copie_CIN.pdf", 
+      "fichier": "binary data", 
+      "type_fichier": "application/pdf", 
+      "role_fichier": "justificatif" 
+    },
+
+    {
+			"nom": "Certificat_Residence.png",
+			"fichier": "binary data",
+			"type_fichier": "image/png",
+			"role_fichier": "justificatif"
+		}
+  ]
+}
+
