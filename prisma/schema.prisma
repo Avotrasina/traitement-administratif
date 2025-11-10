@@ -10,56 +10,50 @@ datasource db {
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model User {
-  id                                            Int           @id @default(autoincrement())
-  nom                                           String        @db.VarChar(100)
-  prenom                                        String?       @db.VarChar(100)
-  adresse                                       String?       @db.VarChar(100)
-  email                                         String        @unique @db.VarChar(150)
-  mot_de_passe                                  String
-  telephone                                     String?       @unique @db.VarChar(10)
-  role                                          String        @default("citoyen") @db.VarChar(20)
-  date_inscription                              DateTime?     @default(now()) @db.Timestamp(6)
-  cin                                           String?       @unique @db.VarChar(12)
-  demandes_demandes_agent_responsable_idTousers demandes[]    @relation("demandes_agent_responsable_idTousers")
-  demandes_demandes_citoyen_idTousers           demandes[]    @relation("demandes_citoyen_idTousers")
-  fichiers                                      fichiers[]
-  traitements                                   traitements[]
+  id                                  Int           @id @default(autoincrement())
+  nom                                 String        @db.VarChar(100)
+  prenom                              String?       @db.VarChar(100)
+  adresse                             String?       @db.VarChar(100)
+  email                               String        @unique @db.VarChar(150)
+  mot_de_passe                        String
+  telephone                           String?       @unique @db.VarChar(10)
+  role                                String        @default("citoyen") @db.VarChar(20)
+  date_inscription                    DateTime?     @default(now()) @db.Timestamp(6)
+  cin                                 String?       @unique @db.VarChar(12)
+  demandes_demandes_citoyen_idTousers demandes[]    @relation("demandes_citoyen_idTousers")
+  traitements                         traitements[]
 
   @@map("users")
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model demandes {
-  id                                         Int             @id @default(autoincrement())
-  citoyen_id                                 Int?
-  type_id                                    Int?
-  description                                String?
-  statut                                     String?         @default("soumise") @db.VarChar(30)
-  date_soumission                            DateTime?       @default(now()) @db.Timestamp(6)
-  date_mise_a_jour                           DateTime?       @default(now()) @db.Timestamp(6)
-  agent_responsable_id                       Int?
-  qr_code                                    String?
-  remarques                                  String?
-  reference                                  String          @unique @db.VarChar(10)
-  users_demandes_agent_responsable_idTousers User?           @relation("demandes_agent_responsable_idTousers", fields: [agent_responsable_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  users_demandes_citoyen_idTousers           User?           @relation("demandes_citoyen_idTousers", fields: [citoyen_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  types_demandes                             types_demandes? @relation(fields: [type_id], references: [id], onDelete: NoAction)
-  fichiers                                   fichiers[]
-  traitements                                traitements[]
+  id               Int             @id @default(autoincrement())
+  citoyen_id       Int?
+  type_id          Int?
+  description      String?
+  statut           String?         @default("soumise") @db.VarChar(30)
+  date_soumission  DateTime?       @default(now()) @db.Timestamp(6)
+  date_mise_a_jour DateTime?       @default(now()) @db.Timestamp(6)
+  qr_code          String?
+  remarque         String?
+  reference        String?         @unique @db.VarChar(10)
+  user             User?           @relation("demandes_citoyen_idTousers", fields: [citoyen_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  types_demande    types_demandes? @relation(fields: [type_id], references: [id], onDelete: NoAction)
+  fichiers         fichiers[]
+  traitements      traitements[]
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model fichiers {
-  id              Int       @id @default(autoincrement())
-  demande_id      Int?
-  proprietaire_id Int?
-  nom_fichier     String?
-  chemin_fichier  String?
-  type_fichier    String?   @db.VarChar(50)
-  role_fichier    String?   @default("justificatif") @db.VarChar(30)
-  date_upload     DateTime? @default(now()) @db.Timestamp(6)
-  demandes        demandes? @relation(fields: [demande_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  users           User?     @relation(fields: [proprietaire_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id             Int       @id @default(autoincrement())
+  demande_id     Int?
+  nom_fichier    String?
+  chemin_fichier String?
+  type_fichier   String?   @db.VarChar(50)
+  role_fichier   String?   @default("justificatif") @db.VarChar(30)
+  date_upload    DateTime? @default(now()) @db.Timestamp(6)
+  demandes       demandes? @relation(fields: [demande_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }
 
 model traitements {

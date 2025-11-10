@@ -1,6 +1,19 @@
 import { Request, Response } from "express";
 import * as demandeService from "../sevices/demandeService";
+import { configurationStorage } from "../config/storage.config";
+import * as documentService from "../sevices/documentService";
 
+const multer = configurationStorage();
+
+// Chercher une demande par sa reference
+export async function getDemandeByReference(req: Request, res: Response) {
+  const ref: string = req.params.reference;
+  if (!ref) {
+    return res.status(404).json({ message: 'Demande introuvable' });
+  }
+  const demande = await demandeService.getDemandeByReference(ref);
+  return res.status(200).json(demande);
+}
 
 // Lister toutes les demandes
 export async function getDemandes(req: Request, res: Response) {
@@ -10,5 +23,56 @@ export async function getDemandes(req: Request, res: Response) {
 
 // Ajouter une nouvelle demande
 export async function addDemande(req: Request, res: Response) {
-  const { citoyen_id, type_id, qr_code, remarque } = req.body;
+  const {  qr_code, remarque, description } = req.body;
+
+  const citoyen_id: number = parseInt(req.body.citoyen_id);
+  const type_id: number = parseInt(req.body.type_id);
+  
+
+  // Validate citoyen
+
+  // Validate type
+
+  // Insert demande first
+  const newDemande = {
+    citoyen_id,
+    type_id,
+    reference: "",
+    description,
+    qr_code,
+    remarque,
+  };
+
+  try {
+    const demande = await demandeService.addDemande(newDemande);
+
+    // Insertion fichier
+    const fichiers = req.files as Express.Multer.File[] | undefined ;
+    if (!fichiers) {
+      return res.status(400).json({message: "Les documents sont requis"});
+    }
+    const documents = fichiers?.map((fichier) => ({
+      demande_id: demande.id,
+      nom_fichier: fichier.filename,
+      chemin_fichier: fichier.path,
+      type_fichier: fichier.mimetype,
+      role_fichier: "justificatif"
+    }));
+
+    const docs = await documentService.addDocument(documents);
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        demande: demande,
+        documents: docs
+      }
+    });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Inernal Server Error' });
+  }
+  
 }
+
