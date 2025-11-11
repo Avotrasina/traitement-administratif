@@ -6,7 +6,7 @@ export async function makeTraitement(traitement : any) {
     data: traitement,
     select: {
       id: true,
-      demande_id: true,
+      demandes: true,
       agent_id: true,
       action: true,
       commentaire: true,

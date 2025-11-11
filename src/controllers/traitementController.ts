@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import * as userService from "../sevices/userService";
 import * as demandeService from "../sevices/demandeService";
 import * as traitementService from "../sevices/traitementService";
-
+import * as notificationService from "../sevices/notificaitonService"
 export async function getTraitements() {
 
 }
@@ -59,9 +59,26 @@ export async function faireTraitement(req: Request, res: Response) {
       action: action,
       commentaire: commentaire
     });
+    
+    const estPrete: boolean = nouveauStatut === "prete";
+    let msg: string = "";
+
+    if (estPrete) {
+      msg = `Votre document est prêt.
+         Veuillez suivre le récupérer au bureau. Reference : ${traitement.demandes?.reference}.`;
+    } else {
+      msg = `Votre document est ${nouveauStatut}.
+         Veuillez suivre tout le temps l'état de votre demande. Reference : ${traitement.demandes?.reference}.`;
+    }
 
     // Notifier le client
-
+    const notification = await notificationService.createNotifiation({
+			citoyen_id: traitement.demandes?.citoyen_id,
+			demande_id: traitement.demandes?.id,
+			titre: `Demande ${traitement.demandes?.reference}`,
+			message: msg
+		});
+    
     return res.status(201).json(traitement);
   } catch (error) {
     return res.status(500).json({ message: 'Internal Server Error', error: error });

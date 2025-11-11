@@ -96,12 +96,12 @@ export async function addDemande(newDemande: any) {
       id: true,
       reference: true,
       citoyen_id: true,
-      type_id: true,
+      types_demande: true,
 			description: true,
 			statut: true,
       qr_code: true,
       remarque: true
-    }
+		}
   });
   return demande;
 }

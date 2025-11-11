@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import * as demandeService from "../sevices/demandeService";
 import { configurationStorage } from "../config/storage.config";
 import * as documentService from "../sevices/documentService";
+import * as notificationService from "../sevices/notificaitonService"
 
 const multer = configurationStorage();
 
@@ -60,6 +61,14 @@ export async function addDemande(req: Request, res: Response) {
     }));
 
     const docs = await documentService.addDocument(documents);
+
+    // Notifier l'utilisateur
+    const notification = await notificationService.createNotifiation({
+			citoyen_id,
+			demande_id: demande.id,
+			titre: `Demande ${demande.types_demande?.nom}`,
+			message: `Votre demande vient d'être soumise. Veuillez suivre votre dossier en utilisant la référence ${demande.reference}.`
+		});
 
     return res.status(200).json({
       success: true,
