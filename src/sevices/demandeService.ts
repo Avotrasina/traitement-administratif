@@ -2,10 +2,40 @@ import { Request, Response } from "express";
 import prisma from "../lib/prisma";
 
 
-// Chercher une demande par son reference
+
+
+
 export async function getDemandeByReference(ref: string) {
-  return await prisma.demandes.findUnique({
+	return await prisma.demandes.findUnique({
 		where: { reference: ref },
+		select: {
+			id: true,
+			types_demande: true,
+			user: {
+				select: {
+					id: true,
+					nom: true,
+					prenom: true,
+					email: true,
+					role: true,
+					adresse: true,
+					cin: true,
+					telephone: true,
+					date_inscription: true,
+				},
+			},
+			reference: true,
+			description: true,
+			qr_code: true,
+			remarque: true,
+		},
+	});
+}
+
+// Chercher une demande par son reference
+export async function getDemandeById(id: number) {
+  return await prisma.demandes.findUnique({
+		where: { id: id },
 		select: {
 			id: true,
 			types_demande: true,
@@ -67,7 +97,8 @@ export async function addDemande(newDemande: any) {
       reference: true,
       citoyen_id: true,
       type_id: true,
-      description: true,
+			description: true,
+			statut: true,
       qr_code: true,
       remarque: true
     }
@@ -75,6 +106,27 @@ export async function addDemande(newDemande: any) {
   return demande;
 }
 // Mettre à jour une demande
+export async function updateStatutDemande(id: number, statut: string) {
+	console.log(`id recu : ${id} statut recu ${statut}`);
+	return await prisma.demandes.update({
+		where: {
+			id: id,
+		},
+		data: {
+			statut,
+		},
+		select: {
+			id: true,
+			reference: true,
+			citoyen_id: true,
+			type_id: true,
+			description: true,
+			statut: true,
+			qr_code: true,
+			remarque: true,
+		},
+	});
+}
 
 // Supprimer une demane
 
