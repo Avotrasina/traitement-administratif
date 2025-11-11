@@ -10,17 +10,18 @@ datasource db {
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model User {
-  id                                  Int           @id @default(autoincrement())
-  nom                                 String        @db.VarChar(100)
-  prenom                              String?       @db.VarChar(100)
-  adresse                             String?       @db.VarChar(100)
-  email                               String        @unique @db.VarChar(150)
+  id                                  Int             @id @default(autoincrement())
+  nom                                 String          @db.VarChar(100)
+  prenom                              String?         @db.VarChar(100)
+  adresse                             String?         @db.VarChar(100)
+  email                               String          @unique @db.VarChar(150)
   mot_de_passe                        String
-  telephone                           String?       @unique @db.VarChar(10)
-  role                                String        @default("citoyen") @db.VarChar(20)
-  date_inscription                    DateTime?     @default(now()) @db.Timestamp(6)
-  cin                                 String?       @unique @db.VarChar(12)
-  demandes_demandes_citoyen_idTousers demandes[]    @relation("demandes_citoyen_idTousers")
+  telephone                           String?         @unique @db.VarChar(10)
+  role                                String          @default("citoyen") @db.VarChar(20)
+  date_inscription                    DateTime?       @default(now()) @db.Timestamp(6)
+  cin                                 String?         @unique @db.VarChar(12)
+  demandes_demandes_citoyen_idTousers demandes[]      @relation("demandes_citoyen_idTousers")
+  notifications                       notifications[]
   traitements                         traitements[]
 
   @@map("users")
@@ -41,6 +42,7 @@ model demandes {
   user             User?           @relation("demandes_citoyen_idTousers", fields: [citoyen_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   types_demande    types_demandes? @relation(fields: [type_id], references: [id], onDelete: NoAction)
   fichiers         fichiers[]
+  notifications    notifications[]
   traitements      traitements[]
 }
 
@@ -74,4 +76,16 @@ model types_demandes {
   delai_estime    Int?
   pieces_requises String[]
   demandes        demandes[]
+}
+
+model notifications {
+  id         Int       @id @default(autoincrement())
+  titre      String    @db.VarChar(50)
+  message    String
+  statut     String?   @default("non_lu") @db.VarChar(20)
+  created_at DateTime? @default(now()) @db.Timestamp(6)
+  demande_id Int
+  citoyen_id Int
+  users      User      @relation(fields: [citoyen_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_citoyen")
+  demandes   demandes  @relation(fields: [demande_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_demande")
 }
