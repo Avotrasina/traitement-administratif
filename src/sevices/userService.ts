@@ -4,7 +4,7 @@ import { PrismaClientUnknownRequestError } from "../generated/prisma/internal/pr
 
 
 // Get user by email
-export async function getUserByEmail(email: string): Promise<User | null> {
+export async function getUserByEmail(email: string) {
 	const user = await prisma.user.findUnique({
 		select: {
 			id: true,
@@ -20,17 +20,6 @@ export async function getUserByEmail(email: string): Promise<User | null> {
 		},
 		where: { email: email },
 	});
-
-	if (!user) return null;
-
-	// Dynamically omit unnecessary fields	
-	delete (user as any).nom;
-	delete (user as any).prenom;
-	delete (user as any).adresse;
-	delete (user as any).telephone;
-	delete (user as any).cin;
-	delete (user as any).date_inscription;
-
 	return user;
 
 }
@@ -69,9 +58,19 @@ export async function getUserById(user_id: number): Promise<User | null> {
 
 // Show all users
 export async function showUsers(): Promise<User[] | null> {
-  const users = await prisma.user.findMany({
-		where: { role: "citoyen" },		
-  });
+	const users = await prisma.user.findMany({
+		select: {
+			id: true,
+			nom: true,
+			prenom: true,
+			email: true,
+			role: true,
+			adresse: true,
+			cin: true,
+			telephone: true,
+			date_inscription: true,
+		},
+	});
   return users;
 
 }

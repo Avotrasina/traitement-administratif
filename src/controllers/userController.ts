@@ -35,9 +35,12 @@ export async function authenticate(req: Request, res: Response) {
 			return res.status(401).json({ message: 'Email or password are incorrect' });
 		}
 
+
 		// Logged in
-		const webToken = generateToken(user.id);
-		return res.status(200).json({ webToken });
+		const webToken = generateToken(user);
+		return res.status(200).json({
+			webToken,			
+		});
 		
 	} catch (error) {
 		console.error(error);

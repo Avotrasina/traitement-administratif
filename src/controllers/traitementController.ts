@@ -67,8 +67,7 @@ export async function faireTraitement(req: Request, res: Response) {
       msg = `Votre document est prêt.
          Veuillez suivre le récupérer au bureau. Reference : ${traitement.demandes?.reference}.`;
     } else {
-      msg = `Votre document est ${nouveauStatut}.
-         Veuillez suivre tout le temps l'état de votre demande. Reference : ${traitement.demandes?.reference}.`;
+      msg = `Votre document est ${nouveauStatut}. Veuillez suivre tout le temps l'état de votre demande. Reference : ${traitement.demandes?.reference}.`;
     }
 
     // Notifier le client
