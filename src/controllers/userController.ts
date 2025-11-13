@@ -1,12 +1,24 @@
 import { Request, Response } from "express";
-import * as userService from './../sevices/userService.js';
+import * as userService from './../sevices/userService';
 import * as bcrypt from "../utils/bcrypt.js";
 import { generateToken } from "../utils/jwt";
-
+import * as demandeService from "../sevices/demandeService"
 
 export async function hello(req: Request, res: Response) {
   res.send('Hello world !');
 }
+
+export async function getDemandeByUser(req: Request, res: Response) {
+	const user_id: number = Number(req.params.id);
+	try {
+		const demandes = await demandeService.getDemandesByUser(user_id);
+		return res.status(200).json(demandes);
+	} catch (error) {
+		console.log(error);
+		return res.status(500).json({ message: 'Internal Server Error' });
+	}
+}
+
 
 // Authenticate the user
 export async function authenticate(req: Request, res: Response) {

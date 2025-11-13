@@ -2,7 +2,22 @@ import { Request, Response } from "express";
 import prisma from "../lib/prisma";
 
 
-
+export async function getDemandesByUser(user_id: number) {
+	return await prisma.demandes.findMany({
+		select: {
+			id: true,
+			types_demande: true,
+			reference: true,
+			description: true,
+			qr_code: true,
+			remarque: true,
+			fichiers: true,
+		},
+		where: {
+			citoyen_id: user_id,
+		},
+	});
+}
 
 
 export async function getDemandeByReference(ref: string) {
@@ -22,8 +37,9 @@ export async function getDemandeByReference(ref: string) {
 					cin: true,
 					telephone: true,
 					date_inscription: true,
-				},
+				}
 			},
+			fichiers: true,
 			reference: true,
 			description: true,
 			qr_code: true,
@@ -80,6 +96,7 @@ export async function getDemandes() {
 					date_inscription: true,
 				},
 			},
+			fichiers: true,
 			reference: true,
 			description: true,
 			qr_code: true,
