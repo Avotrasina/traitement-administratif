@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import * as notificationService from "../sevices/notificaitonService";
+import * as notificationService from "../sevices/notificaitonService.js";
 
 export async function getNotifiations(req: Request, res: Response) {
   const statut: string = req.params.statut || "" ;

@@ -1,7 +1,6 @@
-import prisma from "../lib/prisma";
-import { User } from "../types/user"; 
+import prisma from "../lib/prisma.js";
+import { User } from "../types/user.js";
 import { PrismaClientUnknownRequestError } from "../generated/prisma/internal/prismaNamespace";
-
 
 // Get user by email
 export async function getUserByEmail(email: string) {
@@ -21,7 +20,6 @@ export async function getUserByEmail(email: string) {
 		where: { email: email },
 	});
 	return user;
-
 }
 
 // Get user by id
@@ -50,7 +48,7 @@ export async function getUserById(user_id: number): Promise<User | null> {
 		delete (user as any).adresse;
 		delete (user as any).telephone;
 		delete (user as any).cin;
-		delete (user as any).mot_de_passe;		
+		delete (user as any).mot_de_passe;
 	}
 
 	return user;
@@ -71,21 +69,20 @@ export async function showUsers(): Promise<User[] | null> {
 			date_inscription: true,
 		},
 	});
-  return users;
-
+	return users;
 }
 
 // Add new user in the db
-export async function createUser(user : any) : Promise<User| null> {
-  return await prisma.user.create({
+export async function createUser(user: any): Promise<User | null> {
+	return await prisma.user.create({
 		data: user,
-		omit: {mot_de_passe: true},
+		omit: { mot_de_passe: true },
 	});
 }
 
 export async function deleteUser(user_id: number): Promise<User | null> {
 	return await prisma.user.delete({
-		where: { id: user_id }
+		where: { id: user_id },
 	});
 }
 
@@ -93,7 +90,6 @@ export async function updateUser(user: any): Promise<User | null> {
 	return await prisma.user.update({
 		data: user,
 		omit: { mot_de_passe: true },
-		where: { id: user.id}
+		where: { id: user.id },
 	});
 }
-
