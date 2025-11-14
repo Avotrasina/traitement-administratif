@@ -167,6 +167,7 @@ export async function updateUser(req: Request, res: Response) {
 		const { nom, prenom, email, mot_de_passe } = req.body;
 
 		if (!nom || !email || !mot_de_passe) {
+			console.log(nom, email, mot_de_passe);
 			return res.status(400).json({ message: "All fields are required" });
 		}
 		// email validation

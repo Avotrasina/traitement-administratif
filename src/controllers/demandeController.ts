@@ -29,13 +29,12 @@ export async function getDemandes(req: Request, res: Response) {
 // Ajouter une nouvelle demande
 export async function addDemande(req: Request, res: Response) {
   const {  qr_code, remarque, description } = req.body;
-
   const citoyen_id: number = parseInt(req.body.citoyen_id);
   const type_id: number = parseInt(req.body.type_id);
   
-
+  
   // Validate citoyen
-
+  
   // Validate type
 
   // Insert demande first
@@ -47,15 +46,16 @@ export async function addDemande(req: Request, res: Response) {
     qr_code,
     remarque,
   };
-
+  console.log("New demande from Lico", newDemande);
   try {
     const demande = await demandeService.addDemande(newDemande);
-
+    
     // Insertion fichier
     const fichiers = req.files as Express.Multer.File[] | undefined ;
     if (!fichiers) {
       return res.status(400).json({message: "Les documents sont requis"});
     }
+    console.log("-------------->", fichiers);
     const documents = fichiers?.map((fichier) => ({
       demande_id: demande.id,
       nom_fichier: fichier.filename,
@@ -63,7 +63,7 @@ export async function addDemande(req: Request, res: Response) {
       type_fichier: fichier.mimetype,
       role_fichier: "justificatif"
     }));
-
+    
     const docs = await documentService.addDocument(documents);
 
     // Notifier l'utilisateur
@@ -87,5 +87,14 @@ export async function addDemande(req: Request, res: Response) {
     return res.status(500).json({ message: 'Inernal Server Error' });
   }
   
+}
+
+export async function getTypesDemande(req: Request, res: Response) {
+  try {
+    const types = await demandeService.getTypesDemande();
+    return res.status(200).json(types);
+  } catch (error) {
+    return res.status(500).json({ message: 'Internal Server Error' });
+  }
 }
 

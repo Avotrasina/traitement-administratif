@@ -2,11 +2,11 @@ import express from "express";
 import path from "path";
 import cors from "cors";
 import dotenv from "dotenv";
-import userRouter from "./routes/user.routes";
-import demandeRouter from "./routes/demande.routes";
-import traitemnentRouter from "./routes/traitement.routes";
-import notificationRouter from "./routes/notification.routes";
-
+import userRouter from "./routes/user.routes.js";
+import demandeRouter from "./routes/demande.routes.js";
+import traitemnentRouter from "./routes/traitement.routes.js";
+import notificationRouter from "./routes/notification.routes.js";
+import types_demande_router from "./routes/types_demande.routes.js";
 dotenv.config();
 const app = express();
 app.use(express.json());
@@ -17,5 +17,5 @@ app.use('/api', userRouter);
 app.use('/api', demandeRouter);
 app.use('/api', traitemnentRouter);
 app.use('/api', notificationRouter);
-
+app.use("/api", types_demande_router);
 export default app;

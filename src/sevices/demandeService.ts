@@ -19,6 +19,9 @@ export async function getDemandesByUser(user_id: number) {
 	});
 }
 
+export async function getTypesDemande() {
+	return await prisma.types_demandes.findMany();
+}
 
 export async function getDemandeByReference(ref: string) {
 	return await prisma.demandes.findUnique({
