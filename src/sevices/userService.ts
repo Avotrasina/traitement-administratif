@@ -1,5 +1,5 @@
-import prisma from "../lib/prisma.js";
-import { User } from "../types/user.js";
+import prisma from "../lib/prisma";
+import { User } from "../types/user";
 import { PrismaClientUnknownRequestError } from "../generated/prisma/internal/prismaNamespace";
 
 // Get user by email

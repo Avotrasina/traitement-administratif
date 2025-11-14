@@ -1,4 +1,4 @@
-import prisma from "../lib/prisma.js";
+import prisma from "../lib/prisma";
 
 // Get all notifications
 export async function getNotifiations(statut: string) {

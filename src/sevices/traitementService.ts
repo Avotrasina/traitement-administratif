@@ -1,4 +1,4 @@
-import prisma from "../lib/prisma.js";
+import prisma from "../lib/prisma";
 
 export async function makeTraitement(traitement: any) {
 	return await prisma.traitements.create({

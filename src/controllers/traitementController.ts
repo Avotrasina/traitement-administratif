@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import * as userService from "../sevices/userService.js";
-import * as demandeService from "../sevices/demandeService.js";
-import * as traitementService from "../sevices/traitementService.js";
-import * as notificationService from "../sevices/notificaitonService.js"
+import * as userService from "../sevices/userService";
+import * as demandeService from "../sevices/demandeService";
+import * as traitementService from "../sevices/traitementService";
+import * as notificationService from "../sevices/notificaitonService"
 export async function getTraitements() {
 
 }

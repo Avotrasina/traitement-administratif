@@ -1,6 +1,6 @@
 import { Router } from "express";
-import * as demandeController from "../controllers/demandeController.js";
-import { configurationStorage } from "../config/storage.config.js";
+import * as demandeController from "../controllers/demandeController";
+import { configurationStorage } from "../config/storage.config";
 
 const demandeRouter = Router();
 const multer = configurationStorage();

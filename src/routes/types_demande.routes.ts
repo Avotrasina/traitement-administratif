@@ -1,5 +1,5 @@
 import { Router } from "express";
-import * as demandeController from "../controllers/demandeController.js";
+import * as demandeController from "../controllers/demandeController";
 
 
 const types_demande_router = Router();

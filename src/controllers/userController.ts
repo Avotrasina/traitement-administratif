@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import * as userService from './../sevices/userService.js';
-import * as bcrypt from "../utils/bcrypt.js";
-import { generateToken } from "../utils/jwt.js";
-import * as demandeService from "../sevices/demandeService.js"
+import * as userService from './../sevices/userService';
+import * as bcrypt from "../utils/bcrypt";
+import { generateToken } from "../utils/jwt";
+import * as demandeService from "../sevices/demandeService"
 
 export async function hello(req: Request, res: Response) {
   res.send('Hello world !');

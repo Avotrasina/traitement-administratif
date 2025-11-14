@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import prisma from "../lib/prisma.js";
+import prisma from "../lib/prisma";
 
 
 export async function getDemandesByUser(user_id: number) {

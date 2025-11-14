@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import * as demandeService from "../sevices/demandeService.js";
-import { configurationStorage } from "../config/storage.config.js";
-import * as documentService from "../sevices/documentService.js";
-import * as notificationService from "../sevices/notificaitonService.js"
+import * as demandeService from "../sevices/demandeService";
+import { configurationStorage } from "../config/storage.config";
+import * as documentService from "../sevices/documentService";
+import * as notificationService from "../sevices/notificaitonService"
 
 const multer = configurationStorage();
 
