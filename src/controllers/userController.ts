@@ -14,7 +14,7 @@ export async function getDemandeByUser(req: Request, res: Response) {
 		const demandes = await demandeService.getDemandesByUser(user_id);
 		return res.status(200).json(demandes);
 	} catch (error) {
-		console.log(error);
+		console.error(error);
 		return res.status(500).json({ message: 'Internal Server Error' });
 	}
 }
@@ -80,9 +80,9 @@ export async function getById(req: Request, res: Response) {
 export async function showUsers(req: Request, res: Response) {
   try {
     const users = await userService.showUsers();
-    console.log(users);
     return res.status(200).json(users);
-  } catch (error) {
+	} catch (error) {
+		console.error(error);
     return res.status(500).json({ message: 'Erreur lié au serveur' });
   }
 }

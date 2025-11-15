@@ -32,7 +32,6 @@ export async function addDemande(req: Request, res: Response) {
   const citoyen_id: number = parseInt(req.body.citoyen_id);
   const type_id: number = parseInt(req.body.type_id);
   
-  
   // Validate citoyen
   
   // Validate type
@@ -61,7 +60,6 @@ export async function addDemande(req: Request, res: Response) {
     if (!fichiers) {
       return res.status(400).json({message: "Les documents sont requis"});
     }
-    console.log("-------------->", fichiers);
     const documents = fichiers?.map((fichier) => ({
 			demande_id: updated_demande.id,
 			nom_fichier: fichier.filename,
