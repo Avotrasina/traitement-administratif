@@ -1,6 +1,13 @@
 import { Request, Response } from "express";
 import prisma from "../lib/prisma";
+import QRCode from "qrcode"
 
+export async function generateQr(reference: string) {
+	const url = `https://localhost:8000/demandes/${reference}`;
+
+	const qr = await QRCode.toDataURL(url);
+	return qr; // base64 string
+}
 
 export async function getDemandesByUser(user_id: number) {
 	return await prisma.demandes.findMany({
@@ -125,9 +132,30 @@ export async function addDemande(newDemande: any) {
   });
   return demande;
 }
+
+export async function updateQrCodeDemande(id: number, qr_code: string) {
+		return await prisma.demandes.update({
+			where: {
+				id: id,
+			},
+			data: {
+				qr_code,
+			},
+			select: {
+				id: true,
+				reference: true,
+				citoyen_id: true,
+				types_demande: true,
+				description: true,
+				statut: true,
+				qr_code: true,
+				remarque: true,
+			},
+		});
+}
+
 // Mettre à jour une demande
 export async function updateStatutDemande(id: number, statut: string) {
-	console.log(`id recu : ${id} statut recu ${statut}`);
 	return await prisma.demandes.update({
 		where: {
 			id: id,
@@ -138,6 +166,7 @@ export async function updateStatutDemande(id: number, statut: string) {
 		select: {
 			id: true,
 			reference: true,
+			types_demande: true,
 			citoyen_id: true,
 			type_id: true,
 			description: true,

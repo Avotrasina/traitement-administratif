@@ -28,7 +28,7 @@ export async function getDemandes(req: Request, res: Response) {
 
 // Ajouter une nouvelle demande
 export async function addDemande(req: Request, res: Response) {
-  const {  qr_code, remarque, description } = req.body;
+  const { remarque, description } = req.body;
   const citoyen_id: number = parseInt(req.body.citoyen_id);
   const type_id: number = parseInt(req.body.type_id);
   
@@ -43,41 +43,47 @@ export async function addDemande(req: Request, res: Response) {
     type_id,
     reference: "",
     description,
-    qr_code,
     remarque,
   };
-  console.log("New demande from Lico", newDemande);
   try {
-    const demande = await demandeService.addDemande(newDemande);
+    const user_demande = await demandeService.addDemande(newDemande);
+    const reference: string = user_demande.reference as string;
+    const qr_code: string = await demandeService.generateQr(reference);
+    user_demande.qr_code = qr_code;
     
-    // Insertion fichier
+    // Update the qr_code
+    const updated_demande = await demandeService.updateQrCodeDemande(
+			user_demande.id,
+			reference
+		);
+
     const fichiers = req.files as Express.Multer.File[] | undefined ;
     if (!fichiers) {
       return res.status(400).json({message: "Les documents sont requis"});
     }
     console.log("-------------->", fichiers);
     const documents = fichiers?.map((fichier) => ({
-      demande_id: demande.id,
-      nom_fichier: fichier.filename,
-      chemin_fichier: fichier.path,
-      type_fichier: fichier.mimetype,
-      role_fichier: "justificatif"
-    }));
+			demande_id: updated_demande.id,
+			nom_fichier: fichier.filename,
+			chemin_fichier: fichier.path,
+			type_fichier: fichier.mimetype,
+			role_fichier: "justificatif",
+		}));
     
     const docs = await documentService.addDocument(documents);
 
     // Notifier l'utilisateur
     const notification = await notificationService.createNotifiation({
 			citoyen_id,
-			demande_id: demande.id,
-			titre: `Demande ${demande.types_demande?.nom}`,
-			message: `Votre demande vient d'être soumise. Veuillez suivre votre dossier en utilisant la référence ${demande.reference}.`
+			demande_id: updated_demande.id,
+			titre: `Demande ${updated_demande.types_demande?.nom}`,
+			message: `Votre demande vient d'être soumise. Veuillez suivre votre dossier en utilisant la référence ${updated_demande.reference}.`,
 		});
 
     return res.status(200).json({
       success: true,
       data: {
-        demande: demande,
+        demande: updated_demande,
         documents: docs
       }
     });
