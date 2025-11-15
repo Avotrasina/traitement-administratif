@@ -13,9 +13,11 @@ export async function getDemandesByUser(user_id: number) {
 		select: {
 			id: true,
 			types_demande: true,
+			user: true,
 			reference: true,
 			description: true,
 			qr_code: true,
+			statut: true,
 			remarque: true,
 			fichiers: true,
 		},
