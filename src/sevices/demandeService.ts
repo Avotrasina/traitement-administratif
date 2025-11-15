@@ -1,9 +1,8 @@
-import { Request, Response } from "express";
 import prisma from "../lib/prisma";
 import QRCode from "qrcode"
 
 export async function generateQr(reference: string) {
-	const url = `https://localhost:8000/demandes/${reference}`;
+	const url = `${process.env.URL_BASE}/api/demandes/${reference}`;
 
 	const qr = await QRCode.toDataURL(url);
 	return qr; // base64 string

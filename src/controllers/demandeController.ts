@@ -17,15 +17,6 @@ export async function getDemandeByReference(req: Request, res: Response) {
 }
 
 // Lister toutes les demandes
-export async function getDemandes(req: Request, res: Response) {
-  const demandes = await demandeService.getDemandes();
-  demandes.forEach((demande) => {
-    //const fichiers
-  })
-  //const fichiers = await documentService.getDocuments(deman)
-  return res.status(200).json(demandes);
-}
-
 // Ajouter une nouvelle demande
 export async function addDemande(req: Request, res: Response) {
   const { remarque, description } = req.body;
