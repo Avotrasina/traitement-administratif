@@ -4,7 +4,7 @@ import { configurationStorage } from "../config/storage.config";
 
 const demandeRouter = Router();
 const multer = configurationStorage();
-//demandeRouter.get('/demandes', demandeController.getDemandes);
+demandeRouter.get('/demandes', demandeController.getAllDemandes);
 demandeRouter.get('/demandes/:reference', demandeController.getDemandeByReference);
 demandeRouter.post('/demandes', multer.array("documents", 10), demandeController.addDemande);
 

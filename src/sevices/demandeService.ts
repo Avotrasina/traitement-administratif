@@ -8,6 +8,24 @@ export async function generateQr(reference: string) {
 	return qr; // base64 string
 }
 
+export async function getAllDemandes() {
+		return await prisma.demandes.findMany({
+			select: {
+				id: true,
+				types_demande: true,
+				user: true,
+				reference: true,
+				description: true,
+				qr_code: true,
+				statut: true,
+				remarque: true,
+				fichiers: true,
+				date_soumission: true
+			}
+		})
+		
+}
+
 export async function getDemandesByUser(user_id: number) {
 	return await prisma.demandes.findMany({
 		select: {
@@ -20,6 +38,7 @@ export async function getDemandesByUser(user_id: number) {
 			statut: true,
 			remarque: true,
 			fichiers: true,
+			date_soumission: true
 		},
 		where: {
 			citoyen_id: user_id,

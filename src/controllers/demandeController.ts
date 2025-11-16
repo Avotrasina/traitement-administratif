@@ -6,6 +6,17 @@ import * as notificationService from "../sevices/notificaitonService"
 
 const multer = configurationStorage();
 
+// Lister toutes les demandes
+export async function getAllDemandes(req: Request, res: Response) {
+  try {
+    const demandes = await demandeService.getAllDemandes();
+    return res.status(200).json(demandes);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: error });
+  }
+}
+
 // Chercher une demande par sa reference
 export async function getDemandeByReference(req: Request, res: Response) {
   const ref: string = req.params.reference;
