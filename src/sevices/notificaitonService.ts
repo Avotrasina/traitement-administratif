@@ -1,21 +1,7 @@
 import prisma from "../lib/prisma";
 
 // Get all notifications
-export async function getNotifiations(statut: string) {
-	// Toutes les notifications
-	if (!statut) {
-		return await prisma.notifications.findMany({
-			select: {
-				id: true,
-				citoyen_id: true,
-				demande_id: true,
-				titre: true,
-				message: true,
-				statut: true,
-				created_at: true,
-			},
-		});
-	}
+export async function getNotifiations(user_id : number) {
 	// Notifications avec filtre
 	return await prisma.notifications.findMany({
 		select: {
@@ -27,7 +13,7 @@ export async function getNotifiations(statut: string) {
 			statut: true,
 			created_at: true,
 		},
-		where: { statut },
+		where: { users: {id: user_id} },
 	});
 }
 
@@ -45,6 +31,13 @@ export async function createNotifiation(notif: any) {
 			created_at: true,
 		},
 	});
+}
+
+// Supprimer une notification
+export async function deleteNotification(notif_id: number) {
+	return await prisma.notifications.delete({
+		where: {id: notif_id},
+	})
 }
 
 // Changer le statut de la notification

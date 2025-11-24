@@ -5,6 +5,8 @@ import { configurationStorage } from "../config/storage.config";
 const demandeRouter = Router();
 const multer = configurationStorage();
 demandeRouter.get('/demandes', demandeController.getAllDemandes);
+
+// Lister les demandes faites par un utilisateur
 demandeRouter.get('/demandes/:reference', demandeController.getDemandeByReference);
 demandeRouter.post('/demandes', multer.array("documents", 10), demandeController.addDemande);
 

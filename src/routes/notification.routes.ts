@@ -3,10 +3,17 @@ import * as notificationController from "../controllers/notificationController"
 
 const notificationRouter = Router();
 
-notificationRouter.get('/api/notifications', notificationController.getNotifiations);
-notificationRouter.post('/api/notifications', notificationController.createNotification)
-notificationRouter.patch('/api/notifications/:id', notificationController.markAsRead);
+// Lister les notifications d'un user
+notificationRouter.get('/notifications/user/:id', notificationController.getNotifiations);
 
+// Créer une notification
+notificationRouter.post('/notifications', notificationController.createNotification)
+
+// Marquer la notification comme lue
+notificationRouter.patch('/notifications/:id/lu', notificationController.markAsRead);
+
+// Supprimer une notification
+notificationRouter.delete('/notifications/:id', notificationController.deleteNotification);
 
 
 export default notificationRouter;
