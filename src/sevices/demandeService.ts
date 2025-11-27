@@ -46,8 +46,55 @@ export async function getDemandesByUser(user_id: number) {
 	});
 }
 
+// Type demande
+export async function addTypeDemande(data: any) {
+	return await prisma.types_demandes.create({
+		data,
+		select: {
+			id: true,
+			nom: true,
+			description: true,
+			delai_estime: true,
+			pieces_requises: true,
+		},
+	});
+}
+
+export async function getTypeDemandeById(id: number) {
+	return await prisma.types_demandes.findUnique({
+		where: { id },
+		select: {
+			id: true,
+			nom: true,
+			description: true,
+			delai_estime: true,
+			pieces_requises: true,
+		},
+	});
+}
+
 export async function getTypesDemande() {
 	return await prisma.types_demandes.findMany();
+}
+
+export async function updateTypeDemande(id: number, data: any) {
+	return await prisma.types_demandes.update({
+		where: { id },
+		data: data,
+		select: {
+			id: true,
+			nom: true,
+			description: true,
+			delai_estime: true,
+			pieces_requises: true,
+		},
+	});
+}
+
+export async function deleteTypeDemande(id: number) {
+	return await prisma.types_demandes.delete({
+		where: { id },
+	})
 }
 
 export async function getDemandeByReference(ref: string) {

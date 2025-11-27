@@ -3,6 +3,8 @@ import * as demandeService from "../sevices/demandeService";
 import { configurationStorage } from "../config/storage.config";
 import * as documentService from "../sevices/documentService";
 import * as notificationService from "../sevices/notificaitonService"
+import { types } from "node:util";
+import { describe } from "node:test";
 
 const multer = configurationStorage();
 
@@ -12,7 +14,6 @@ export async function getAllDemandes(req: Request, res: Response) {
     const demandes = await demandeService.getAllDemandes();
     return res.status(200).json(demandes);
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ message: error });
   }
 }
@@ -89,12 +90,23 @@ export async function addDemande(req: Request, res: Response) {
     });
 
   } catch (error) {
-    console.error(error);
     return res.status(500).json({ message: 'Inernal Server Error' });
   }
   
 }
 
+export async function getTypeDemandeById(req: Request, res: Response) {
+  const id: number = Number(req.params.id);
+  if (isNaN(id)) {
+			return res.json(400).json({ message: "Id invalid" });
+  }
+  try {
+    const type_demande = await demandeService.getTypeDemandeById(id);
+    return res.status(200).json(type_demande);
+  } catch (error) {
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+}
 export async function getTypesDemande(req: Request, res: Response) {
   try {
     const types = await demandeService.getTypesDemande();
@@ -104,3 +116,55 @@ export async function getTypesDemande(req: Request, res: Response) {
   }
 }
 
+
+export async function addTypeDemande(req: Request, res: Response) {
+  try {
+    const { nom, description, delai_estime, pieces_requises } = req.body;
+    // console.log(nom, description, delai_estime, pieces_requises);
+    if (!nom || !description || !delai_estime || !pieces_requises) {
+      return res.status(400).json({ message: "Tous les champs sont requis" });
+    }
+
+    const types_demande = await demandeService.addTypeDemande({
+      nom, description, delai_estime, pieces_requises
+    });
+
+    return res.status(200).json(types_demande);
+  } catch (error) {
+    return res.status(500).json({ message: 'Internal Server Error', error });
+  }
+}
+
+export async function updateTypeDemande(req: Request, res: Response) {
+  const id = Number(req.params.id);
+  const { nom, description, pieces_requises, delai_estime } = req.body;
+  if (isNaN(id)) {
+    return res.status(400).json({ message: "Id invalid" });
+  }
+  try {
+    const updatedTypeDemande = await demandeService.updateTypeDemande(id, {
+      nom, description, pieces_requises, delai_estime
+    })
+
+    return res.status(200).json(updatedTypeDemande);
+
+  } catch (error) {
+    return res.status(500).json({message: "Erreur Serveur"});
+  }
+
+}
+
+export async function deleteTypeDemande(req: Request, res: Response) {
+  const id: number = Number(req.params.id);
+
+  if (isNaN(id)) {
+    return res.json(400).json({ message: "Id invalid" });
+  }
+
+  try {
+    const deletedTypeDemande = await demandeService.deleteTypeDemande(id);
+    return res.status(200).json({message: "Type de demande supprimee"});
+  } catch (error) {
+    return res.status(500).json({ message: "Erreur Serveur" });
+  }
+}
