@@ -117,6 +117,7 @@ export async function getDemandeByReference(ref: string) {
 				}
 			},
 			fichiers: true,
+			statut: true,
 			reference: true,
 			description: true,
 			qr_code: true,
@@ -146,6 +147,7 @@ export async function getDemandeById(id: number) {
 				},
 			},
 			reference: true,
+			statut: true,
 			description: true,
 			qr_code: true,
 			remarque: true,
@@ -175,6 +177,7 @@ export async function getDemandes() {
 			},
 			fichiers: true,
 			reference: true,
+			statut: true,
 			description: true,
 			qr_code: true,
 			remarque: true,
