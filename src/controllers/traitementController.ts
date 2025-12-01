@@ -11,6 +11,7 @@ export async function getTraitements() {
 export async function faireTraitement(req: Request, res: Response) {
   const demande_id = Number(req.params.id);
   const agent_id = Number(req.body.agent_id);
+  const estValide = req.body.estValide as boolean | undefined;
   const { action, commentaire } = req.body;
   if (isNaN(agent_id) || isNaN(demande_id) || !userService.getUserById(agent_id) || !demandeService.getDemandeById(demande_id)) {
     return res.status(400).json({ message: 'Identifiants invalides' });
@@ -27,12 +28,14 @@ export async function faireTraitement(req: Request, res: Response) {
 			nouveauStatut = "soumise";
 			break;
 
+    /**
+     * par défaut: soumise
+     * après verification -> en cours / refusee (à envoyer avec estValide )
+     * après finition -> prête
+     * après recuperation -> remise
+     */
 		case "verification":
-			nouveauStatut = "approuvee";
-			break;
-
-		case "validation":
-			nouveauStatut = "en cours";
+			nouveauStatut = estValide? "en cours" : "refusee";
 			break;
 
 		case "finition":

@@ -28,7 +28,10 @@ export async function getDemandeByReference(req: Request, res: Response) {
   return res.status(200).json(demande);
 }
 
-// Lister toutes les demandes
+// Mettre à jour une demande
+export async function updateDemande(req: Request, res: Response) {
+  
+}
 // Ajouter une nouvelle demande
 export async function addDemande(req: Request, res: Response) {
   const { remarque, description } = req.body;

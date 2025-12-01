@@ -200,6 +200,25 @@ export async function addDemande(newDemande: any) {
   return demande;
 }
 
+// Mettre à jour une demande
+export async function udpateDemande(id: number, demande: any) {
+	const updated_demande = await prisma.demandes.update({
+		where: {id},
+		data: demande,
+		select: {
+			id: true,
+			reference: true,
+			citoyen_id: true,
+			types_demande: true,
+			description: true,
+			statut: true,
+			qr_code: true,
+			remarque: true,
+		},
+	});
+	return updated_demande;
+}
+
 export async function updateQrCodeDemande(id: number, qr_code: string) {
 		return await prisma.demandes.update({
 			where: {
