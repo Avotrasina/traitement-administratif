@@ -3,7 +3,19 @@ import * as userService from "../sevices/userService";
 import * as demandeService from "../sevices/demandeService";
 import * as traitementService from "../sevices/traitementService";
 import * as notificationService from "../sevices/notificaitonService"
-export async function getTraitements() {
+
+
+export async function getTraitement(req: Request, res: Response) {
+  const demande_id = Number(req.params.id);
+  if (isNaN(demande_id)) {
+    return res.status(403).json({ message: "Demande id invalide" });
+  }
+  try {
+    const demande_avec_traitement = await traitementService.getTraitement(demande_id);
+    return res.status(200).json(demande_avec_traitement);
+  } catch (error) {
+    return res.status(500).json({message: "Internal error", error})
+  }
 
 }
 

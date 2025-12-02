@@ -1,5 +1,13 @@
 import prisma from "../lib/prisma";
 
+export async function getTraitement(id: number) {
+	return await prisma.demandes.findUnique({
+		where: { id },
+		include: {traitements: true}
+	})
+}
+
+
 export async function makeTraitement(traitement: any) {
 	return await prisma.traitements.create({
 		data: traitement,
