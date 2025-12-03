@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
+import { verifyToken } from "../utils/jwt";
 
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY || 'admin123';
 
@@ -11,11 +11,11 @@ export interface AuthRequest extends Request {
 export function authenticateToken(req: AuthRequest, res: Response, next: NextFunction) {
   const authHeader = req.headers.authorization;
   if (!authHeader) return res.status(401).json({ message: "Token missing" });
-
+  console.log(authHeader);
   const token = authHeader.split(" ")[1];
   // Decode
   try {
-    const decoded = jwt.verify(token, JWT_SECRET_KEY);
+    const decoded = verifyToken(token);
     req.user = decoded;
     next();
   } catch (error) {

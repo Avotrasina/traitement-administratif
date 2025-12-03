@@ -20,8 +20,10 @@ export async function getAllDemandes() {
 				statut: true,
 				remarque: true,
 				fichiers: true,
-				date_soumission: true
+				date_soumission: true,
+				traitements: true
 			}
+			
 		})
 		
 }
