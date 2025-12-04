@@ -94,7 +94,7 @@ model notifications {
 model password_reset_tokens {
   id         Int       @id @default(autoincrement())
   user_id    Int?
-  token      String    @db.VarChar(100)
+  token      String    @unique @db.VarChar(100)
   expires_at DateTime? @db.Timestamp(6)
   is_used    Boolean?  @default(false)
   users      User?     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_reset_password_user")

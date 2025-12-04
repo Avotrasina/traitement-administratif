@@ -10,6 +10,8 @@ authRouter.get("/hello", authenticateToken, (req: AuthRequest, res) => {
 });
 
 authRouter.post("/auth/forgot-password", authController.forgot_password);
+authRouter.post("/auth/reset-password", authController.reset_password);
+
 
 authRouter.post("/register", userController.createUser);
 authRouter.post("/login", userController.authenticate);
