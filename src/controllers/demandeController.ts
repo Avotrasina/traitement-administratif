@@ -76,13 +76,15 @@ export async function addDemande(req: Request, res: Response) {
       message: `Votre demande vient d'être soumise. Veuillez suivre votre dossier en utilisant la référence ${updated_demande.reference}.`,
     });
 
+    // Attach the files
+    updated_demande.fichiers = docs;
+
     return res.status(200).json({
-      success: true,
-      data: {
-        demande: updated_demande,
-        documents: docs
-      }
-    });
+			success: true,
+			data: {
+				demande: updated_demande,
+			},
+		});
 
   } catch (error) {
     return res.status(500).json({ message: 'Inernal Server Error' });
@@ -105,7 +107,8 @@ export async function updateDemande(req: Request, res: Response) {
     id: demande_id,
 		citoyen_id,
 		type_id,
-		description,
+    description,
+    statut: "soumise",
 		remarque,
   };
   
@@ -124,8 +127,9 @@ export async function updateDemande(req: Request, res: Response) {
 			role_fichier: "justificatif",
 		}));
 
-		const docs = await documentService.addDocument(documents);
-
+		//const docs = await documentService.addDocument(documents);
+    const updated_demande = await documentService.updateDocument(demande_id, documents);
+    
 		// Notifier l'utilisateur
 		const notification = await notificationService.createNotifiation({
 			citoyen_id,
@@ -137,12 +141,11 @@ export async function updateDemande(req: Request, res: Response) {
 		return res.status(200).json({
 			success: true,
 			data: {
-				demande: user_demande,
-				documents: docs,
+				demande: updated_demande,
 			},
 		});
-	} catch (error) {
-		return res.status(500).json({ message: "Inernal Server Error" });
+  } catch (error) {
+		return res.status(500).json({ message: "Inernal Server Error", error });
 	}
 }
 

@@ -219,6 +219,7 @@ export async function udpateDemande(demande: any) {
 			statut: true,
 			qr_code: true,
 			remarque: true,
+			fichiers: true
 		},
 	});
 	return updated_demande;
