@@ -63,7 +63,6 @@ export async function authenticate(req: Request, res: Response) {
 
 export async function getById(req: Request, res: Response) {
   const user_id: number = Number(req.params.id);
-  console.log(user_id);
   try {
     const user = await userService.getUserById(user_id);
     if (!user) return res.status(404).json({ message: 'User not found' });
@@ -90,7 +89,6 @@ export async function showUsers(req: Request, res: Response) {
 // Create a new user
 export async function createUser(req: Request, res: Response) {
 	const { role } = req.body;
-	console.log(role);
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   if (role === 'admin' || role === 'agent') {
     // validation part
@@ -167,7 +165,6 @@ export async function updateUser(req: Request, res: Response) {
 		const { nom, prenom, email, mot_de_passe } = req.body;
 
 		if (!nom || !email || !mot_de_passe) {
-			console.log(nom, email, mot_de_passe);
 			return res.status(400).json({ message: "All fields are required" });
 		}
 		// email validation
@@ -241,10 +238,6 @@ export async function deleteUser(req: Request, res: Response) {
   } catch (error) {
     return res.status(500).json({ message: `Internal Serveur Error: ${error}` });
   }
-
-
-  console.log(user_id);
-  return res.status(200);
 }
 
 

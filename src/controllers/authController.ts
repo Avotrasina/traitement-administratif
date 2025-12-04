@@ -16,7 +16,6 @@ export async function reset_password(req: Request, res: Response) {
   try {
 		// Find the token in the DB
     const tokenInfo = await resetPasswordService.findTokenInfo(token);
-    console.log('Token Info', tokenInfo);
 		if (!tokenInfo) {
 			return res.status(404).json({ message: "Invalid or inexsting token" });
 		}
@@ -50,7 +49,6 @@ export async function reset_password(req: Request, res: Response) {
 
 export async function forgot_password(req: Request, res: Response) {
   const user_email = req.body.email;
-  console.log("email recu", user_email);
 
   // Vérifier que l'email existe
   const user = await userService.getUserByEmail(user_email);
