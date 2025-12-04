@@ -123,7 +123,6 @@ export async function getTypesDemande(req: Request, res: Response) {
 export async function addTypeDemande(req: Request, res: Response) {
   try {
     const { nom, description, delai_estime, pieces_requises } = req.body;
-    // console.log(nom, description, delai_estime, pieces_requises);
     if (!nom || !description || !delai_estime || !pieces_requises) {
       return res.status(400).json({ message: "Tous les champs sont requis" });
     }

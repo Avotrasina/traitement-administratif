@@ -4,9 +4,9 @@ dotenv.config();
 import nodemailer from "nodemailer";
 
 const transporter = nodemailer.createTransport({
-	host: process.env.SMTP_HOST, // e.g., smtp.gmail.com
+	host: process.env.SMTP_HOST, 
 	port: Number(process.env.SMTP_PORT) || 587,
-	secure: true, // true for 465, false for other ports
+	secure: true, 
 	auth: {
 		user: process.env.SMTP_USER,
 		pass: process.env.SMTP_PASS,
@@ -15,11 +15,6 @@ const transporter = nodemailer.createTransport({
 
 export const sendEmail = async (to: string, subject: string, html: string) => {
 	try {
-		const user = process.env.SMTP_USER;
-		const pass = process.env.SMTP_PASS;
-		const host = process.env.SMTP_HOST;
-		const port = process.env.SMTP_PORT;
-		console.log(host, user, pass, port);
 		const info = await transporter.sendMail({
 			from: `"Admin" <${process.env.SMTP_USER}>`,
 			to,
