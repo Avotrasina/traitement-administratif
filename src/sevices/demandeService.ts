@@ -206,9 +206,9 @@ export async function addDemande(newDemande: any) {
 }
 
 // Mettre à jour une demande
-export async function udpateDemande(id: number, demande: any) {
+export async function udpateDemande(demande: any) {
 	const updated_demande = await prisma.demandes.update({
-		where: {id},
+		where: {id: demande.id},
 		data: demande,
 		select: {
 			id: true,
@@ -224,26 +224,6 @@ export async function udpateDemande(id: number, demande: any) {
 	return updated_demande;
 }
 
-export async function updateQrCodeDemande(id: number, qr_code: string) {
-		return await prisma.demandes.update({
-			where: {
-				id: id,
-			},
-			data: {
-				qr_code,
-			},
-			select: {
-				id: true,
-				reference: true,
-				citoyen_id: true,
-				types_demande: true,
-				description: true,
-				statut: true,
-				qr_code: true,
-				remarque: true,
-			},
-		});
-}
 
 // Mettre à jour une demande
 export async function updateStatutDemande(id: number, statut: string) {
@@ -269,5 +249,9 @@ export async function updateStatutDemande(id: number, statut: string) {
 }
 
 // Supprimer une demane
-
+export async function deleteDemande(id: number) {
+	return await prisma.demandes.delete({
+		where: {id}
+	})
+}
 // Rechercher une demande

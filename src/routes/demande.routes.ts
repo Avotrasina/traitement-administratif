@@ -9,5 +9,6 @@ demandeRouter.get('/demandes', demandeController.getAllDemandes);
 // Lister les demandes faites par un utilisateur
 demandeRouter.get('/demandes/:reference', demandeController.getDemandeByReference);
 demandeRouter.post('/demandes', multer.array("documents", 10), demandeController.addDemande);
-
+demandeRouter.put('/demandes/:id', multer.array("documents", 10), demandeController.updateDemande);
+demandeRouter.delete('/demandes/:id', demandeController.deleteDemande);
 export default demandeRouter;

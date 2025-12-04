@@ -28,19 +28,11 @@ export async function getDemandeByReference(req: Request, res: Response) {
   return res.status(200).json(demande);
 }
 
-// Mettre à jour une demande
-export async function updateDemande(req: Request, res: Response) {
-  
-}
-// Ajouter une nouvelle demande
 export async function addDemande(req: Request, res: Response) {
   const { remarque, description } = req.body;
   const citoyen_id: number = parseInt(req.body.citoyen_id);
   const type_id: number = parseInt(req.body.type_id);
   
-  // Validate citoyen
-  
-  // Validate type
 
   // Insert demande first
   const newDemande = {
@@ -57,32 +49,32 @@ export async function addDemande(req: Request, res: Response) {
     user_demande.qr_code = qr_code;
     
     // Update the qr_code
-    const updated_demande = await demandeService.updateQrCodeDemande(
-			user_demande.id,
-			reference
-		);
+    const updated_demande = await demandeService.udpateDemande({
+      id: user_demande.id,
+      qr_code
+    });
 
     const fichiers = req.files as Express.Multer.File[] | undefined ;
     if (!fichiers) {
       return res.status(400).json({message: "Les documents sont requis"});
     }
     const documents = fichiers?.map((fichier) => ({
-			demande_id: updated_demande.id,
-			nom_fichier: fichier.filename,
-			chemin_fichier: fichier.path,
-			type_fichier: fichier.mimetype,
-			role_fichier: "justificatif",
-		}));
+      demande_id: updated_demande.id,
+      nom_fichier: fichier.filename,
+      chemin_fichier: fichier.path,
+      type_fichier: fichier.mimetype,
+      role_fichier: "justificatif",
+    }));
     
     const docs = await documentService.addDocument(documents);
 
     // Notifier l'utilisateur
     const notification = await notificationService.createNotifiation({
-			citoyen_id,
-			demande_id: updated_demande.id,
-			titre: `Demande ${updated_demande.types_demande?.nom}`,
-			message: `Votre demande vient d'être soumise. Veuillez suivre votre dossier en utilisant la référence ${updated_demande.reference}.`,
-		});
+      citoyen_id,
+      demande_id: updated_demande.id,
+      titre: `Demande ${updated_demande.types_demande?.nom}`,
+      message: `Votre demande vient d'être soumise. Veuillez suivre votre dossier en utilisant la référence ${updated_demande.reference}.`,
+    });
 
     return res.status(200).json({
       success: true,
@@ -98,6 +90,86 @@ export async function addDemande(req: Request, res: Response) {
   
 }
 
+// Mettre à jour une demande
+export async function updateDemande(req: Request, res: Response) {
+  const demande_id = Number(req.params.id);
+  if (isNaN(demande_id)) {
+    return res.status(400).json({ message: "Id demande invalide" });
+  }
+
+  const { remarque, description } = req.body;
+	const citoyen_id: number = parseInt(req.body.citoyen_id);
+  const type_id: number = parseInt(req.body.type_id); 
+
+  const newDemande = {
+    id: demande_id,
+		citoyen_id,
+		type_id,
+		description,
+		remarque,
+  };
+  
+  try {
+		const user_demande = await demandeService.udpateDemande(newDemande);
+
+		const fichiers = req.files as Express.Multer.File[] | undefined;
+		if (!fichiers) {
+			return res.status(400).json({ message: "Les documents sont requis" });
+		}
+		const documents = fichiers?.map((fichier) => ({
+			demande_id: user_demande.id,
+			nom_fichier: fichier.filename,
+			chemin_fichier: fichier.path,
+			type_fichier: fichier.mimetype,
+			role_fichier: "justificatif",
+		}));
+
+		const docs = await documentService.addDocument(documents);
+
+		// Notifier l'utilisateur
+		const notification = await notificationService.createNotifiation({
+			citoyen_id,
+			demande_id: user_demande.id,
+			titre: `Demande ${user_demande.types_demande?.nom}`,
+			message: `Votre demande vient d'être modifié. Veuillez suivre votre dossier en utilisant la référence ${user_demande.reference}.`,
+		});
+
+		return res.status(200).json({
+			success: true,
+			data: {
+				demande: user_demande,
+				documents: docs,
+			},
+		});
+	} catch (error) {
+		return res.status(500).json({ message: "Inernal Server Error" });
+	}
+}
+
+// Supprimer une demande
+export async function deleteDemande(req: Request, res: Response) {
+  const demande_id = Number(req.params.id);
+  if (isNaN(demande_id)) {
+    return res.status(400).json({ message: "Id demande invalide" });
+  }
+
+  // Check if Demande exists
+  try {
+    const demande = await demandeService.getDemandeById(demande_id);
+    if (!demande) {
+      return res.status(404).json({ message: "Demande not found" });
+    }
+  
+    // Delete demande
+    const deleted_demande = await demandeService.deleteDemande(demande_id);
+    return res.status(200).json({ message: "Demande deleted" });
+  } catch (error) {
+    return res.status(500).json({ messsage: "Internal Error", error });
+  }
+
+}
+
+// Ajouter une nouvelle demande
 export async function getTypeDemandeById(req: Request, res: Response) {
   const id: number = Number(req.params.id);
   if (isNaN(id)) {
