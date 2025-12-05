@@ -3,7 +3,7 @@ import * as userService from "../sevices/userService"
 import * as resetPasswordService from "../sevices/resetPasswordService"
 import { generateToken } from "../utils/jwt";
 import { hashPassword, hashToken } from "../utils/bcrypt";
-import { sendEmail } from "../sevices/emailService";
+
 import crypto from "crypto";
 
 // Reset the password
@@ -68,14 +68,13 @@ export async function forgot_password(req: Request, res: Response) {
     const email_subject = "Réinitialisation de votre mot de passe";
     const email_content = `
     <h3>Utiliser ce lien pour accéder à la page de réinitialisation de votre mot de passe</h3>
-    <p>Cliquez
+    <p>Cliquez ce lien
     <a href="https://traitement-admin/reset-password?token=${hashedToken}">link</a>
     </p>
     
     `;
 
-    await sendEmail(user_email, email_subject, email_content);
-
+    //const emailResponse = await sendMail(user_email, email_subject, email_content);
     // Enregistre l'infomration dans la base
     const savedToken = await resetPasswordService.saveToken({
       user_id: user.id,

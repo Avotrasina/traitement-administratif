@@ -1,12 +1,16 @@
 import prisma from "../lib/prisma";
 
-export async function addDocument(documents: any) {
-	const docs = await prisma.fichiers.createManyAndReturn({
-		data: documents,
-	});
+export async function addDocument(documents: any[]) {
+  const createdDocs = [];
 
-	return docs;
+  for (const doc of documents) {
+    const created = await prisma.fichiers.create({ data: doc });
+    createdDocs.push(created);
+  }
+
+  return createdDocs;
 }
+
 
 
 export async function updateDocument(

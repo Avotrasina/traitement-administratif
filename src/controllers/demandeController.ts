@@ -3,9 +3,8 @@ import * as demandeService from "../sevices/demandeService";
 import { configurationStorage } from "../config/storage.config";
 import * as documentService from "../sevices/documentService";
 import * as notificationService from "../sevices/notificaitonService"
-import { types } from "node:util";
-import { describe } from "node:test";
-
+import { randomUUID } from "crypto";
+import { uploadFileToSupabase } from "../utils/uploadToSupabase";
 const multer = configurationStorage();
 
 // Lister toutes les demandes
@@ -30,9 +29,12 @@ export async function getDemandeByReference(req: Request, res: Response) {
 
 export async function addDemande(req: Request, res: Response) {
   const { remarque, description } = req.body;
-  const citoyen_id: number = parseInt(req.body.citoyen_id);
-  const type_id: number = parseInt(req.body.type_id);
+  const citoyen_id: number = Number(req.body.citoyen_id);
+  const type_id: number = Number(req.body.type_id);
   
+  if (isNaN(type_id) || isNaN(citoyen_id) || !remarque || !description) {
+    return res.status(400).json({ message: "Tous les champs sont requis" });
+  }
 
   // Insert demande first
   const newDemande = {
@@ -58,15 +60,32 @@ export async function addDemande(req: Request, res: Response) {
     if (!fichiers) {
       return res.status(400).json({message: "Les documents sont requis"});
     }
-    const documents = fichiers?.map((fichier) => ({
-      demande_id: updated_demande.id,
-      nom_fichier: fichier.filename,
-      chemin_fichier: fichier.path,
-      type_fichier: fichier.mimetype,
-      role_fichier: "justificatif",
-    }));
-    
+
+    const documents: any[] = []
+
+    for (const fichier of fichiers) {
+			// Upload to Supabase
+			const ext = fichier.originalname.split(".").pop(); // keep extension
+			const encodedName = `${randomUUID()}.${ext}`;
+
+			const publicUrl = await uploadFileToSupabase(
+				fichier,
+				`demande/${updated_demande.reference}/${encodedName}`
+			);
+
+			documents.push({
+				demande_id: updated_demande.id,
+				nom_fichier: encodedName,
+				chemin_fichier: publicUrl,
+				type_fichier: fichier.mimetype,
+				role_fichier: "justificatif",
+			});
+		}
+
     const docs = await documentService.addDocument(documents);
+
+    // Attach the files
+    updated_demande.fichiers = docs as any
 
     // Notifier l'utilisateur
     const notification = await notificationService.createNotifiation({
@@ -76,9 +95,6 @@ export async function addDemande(req: Request, res: Response) {
       message: `Votre demande vient d'être soumise. Veuillez suivre votre dossier en utilisant la référence ${updated_demande.reference}.`,
     });
 
-    // Attach the files
-    updated_demande.fichiers = docs;
-
     return res.status(200).json({
 			success: true,
 			data: {
@@ -87,7 +103,7 @@ export async function addDemande(req: Request, res: Response) {
 		});
 
   } catch (error) {
-    return res.status(500).json({ message: 'Inernal Server Error' });
+    return res.status(500).json({ message: 'Inernal Server Error', error });
   }
   
 }
@@ -119,13 +135,29 @@ export async function updateDemande(req: Request, res: Response) {
 		if (!fichiers) {
 			return res.status(400).json({ message: "Les documents sont requis" });
 		}
-		const documents = fichiers?.map((fichier) => ({
-			demande_id: user_demande.id,
-			nom_fichier: fichier.filename,
-			chemin_fichier: fichier.path,
-			type_fichier: fichier.mimetype,
-			role_fichier: "justificatif",
-		}));
+		
+
+    const documents: any[] = [];
+
+		for (const fichier of fichiers) {
+			// Upload to Supabase
+			const ext = fichier.originalname.split(".").pop(); // keep extension
+			const encodedName = `${randomUUID()}.${ext}`;
+
+			const publicUrl = await uploadFileToSupabase(
+				fichier,
+				`demande/${user_demande.reference}/${encodedName}`
+			);
+
+			documents.push({
+				demande_id: user_demande.id,
+				nom_fichier: encodedName,
+				chemin_fichier: publicUrl,
+				type_fichier: fichier.mimetype,
+				role_fichier: "justificatif",
+			});
+		}
+
 
 		//const docs = await documentService.addDocument(documents);
     const updated_demande = await documentService.updateDocument(demande_id, documents);
