@@ -69,7 +69,7 @@ export async function forgot_password(req: Request, res: Response) {
     const email_content = `
     <h3>Utiliser ce lien pour accéder à la page de réinitialisation de votre mot de passe</h3>
     <p>Cliquez ce lien
-    <a href="http://localhost:3000/reset-password?token=${hashedToken}">https://localhost:3000/reset-password?token=${hashedToken}</a>
+    <a href="http://localhost:3000/reset-password?token=${hashedToken}">http://localhost:3000/reset-password?token=${hashedToken}</a>
     </p>
     
     `;
