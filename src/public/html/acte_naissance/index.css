@@ -3,15 +3,27 @@
 	--paper: #e9f4ff;
 	--ink: #0a2a4a;
 }
+*, ::before, ::after {	
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
 body {
-  background: linear-gradient(180deg, #d7eaf8 0%, #f7fbff 100%);
+  background: transparent !important;
 	font-family: "Times New Roman", Times, serif;
 	color: var(--ink);
-	display: flex;
-	align-items: flex-start;
-	justify-content: center;
 	padding: 40px 12px;
 }
+
+.page {
+	display: flex;
+	align-items: flex-start;
+	height: 100vh;
+	justify-content: center;
+  width: 100%;
+  padding: 20px;
+}
+
 .paper {
 	width: 780px;
 	min-height: 1050px;
@@ -38,8 +50,6 @@ body {
 .header .left-head .slogan {
 	font-weight: bold;
 }
-
-
 
 
 .right-box {
@@ -95,17 +105,17 @@ body {
 .main .content {
   margin-top: 40px;
 }
-/* signature and stamps */
-.footer-area {
-	position: absolute;
-	left: 48px;
-	right: 48px;
-	bottom: 36px;
-}
 
 /* Footer */
-.main .footer {
-	margin-top: 50px;
+.footer {
+  width: 100%;
+  text-align: center;
+  padding: 10px 30px;
+  font-style: italic;
+  font-size: 18px;
+  color: var(--ink);
+  page-break-inside: avoid;
+  line-height: 1.5;
 }
 
 .main .footer h3 {
@@ -125,24 +135,6 @@ body {
 	font-style:normal;
 }
 
-.stamp {
-	position: absolute;
-	left: 36px;
-	bottom: 140px;
-	width: 120px;
-	height: 120px;
-	border-radius: 50%;
-	border: 3px solid rgba(10, 40, 80, 0.1);
-	opacity: 0.7;
-	transform: rotate(-12deg);
-}
-.stamp.small {
-	left: 150px;
-	bottom: 200px;
-	width: 90px;
-	height: 90px;
-	opacity: 0.6;
-}
 
 /* signature scribble (diagonal) */
 .signature-line {
@@ -161,11 +153,8 @@ body {
 	box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
-.signature {
-	position: absolute;
-	right: 10%;
-	bottom: 20%;
-}
+
+
 
 /* make document feel aged (subtle noise) */
 .paper:after {

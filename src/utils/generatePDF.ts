@@ -91,10 +91,17 @@ export default async function generatePDF(enfant: any, pere: any, mere: any, sag
   await page.setContent(html, { waitUntil: "networkidle0" });
   
   const pdfBuffer = await page.pdf({
-    format: "A4",
-    printBackground: true, // include background colors/images
-    margin: { top: "10mm", bottom: "10mm", left: "10mm", right: "10mm" },
-  });
+		format: "A4",
+		printBackground: true,
+		width: "210mm",
+		height: "297mm",
+		margin: {
+			top: "0mm",
+			bottom: "0mm",
+			left: "0mm",
+			right: "0mm",
+		},
+	});
   
   await browser.close();
 
