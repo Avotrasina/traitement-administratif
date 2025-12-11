@@ -17,7 +17,6 @@ export async function createPDF(req: Request, res: Response) {
 			return res.status(400).json({ message: "Id invalid" });
     }
     
-    console.log('id', id_demande);
 
 		let enfant = req.body.enfant;
 		let pere = req.body.pere;

@@ -23,18 +23,17 @@ export default async function generatePDF(enfant: any, pere: any, mere: any, sag
   const long_sexe = enfant.sexe === "M" ? 'zazalahy' : 'zazavavy';
   // Load HTML file
   const htmlPath = path.join(
-    __dirname,
-    "./../public/html/acte_naissance",
-    "index.html"
-  );
+		process.cwd(),
+		"public/html/acte_naissance/index.html"
+	);
+
   let html = fs.readFileSync(htmlPath, "utf8");
   
   // Load CSS file
   const cssPath = path.join(
-    __dirname,
-    "./../public/html/acte_naissance",
-    "index.css"
-  );
+		process.cwd(),
+		"public/html/acte_naissance/index.css"
+	);
   const css = fs.readFileSync(cssPath, "utf8");
   console.log(formatDateToMalagasy(new Date(pere.date_nais)));
   // Inject CSS inside <style> tag
