@@ -2,26 +2,25 @@
   import fs from "fs";
   import path from "path";
 import { deflate } from "zlib";
-import {formatDateToMalagasy, formatDateToFrench, getTodayYYYYMMDD, getDateYYYMMDD} from "./dateMalagasy";
+import {formatDateToMalagasy, formatDateToFrench, getTodayYYYYMMDD, formatDateToFR} from "./dateMalagasy";
 import { formatHeureToMalagasy } from "./heureMalagasy";
 
 
 
-export default async function generatePDF(enfant: any, pere: any, mere:any, sage_femme: any) {
+export default async function generatePDF(enfant: any, pere: any, mere: any, sage_femme: any) {
+ 
   // Prepara data
   enfant.nom_complet = `${enfant.nom} ${enfant.prenom}`;
   pere.nom_complet = `${pere.nom} ${pere.prenom}`;
   mere.nom_complet = `${mere.nom} ${mere.prenom}`;
   sage_femme.nom_complet = `${sage_femme.nom} ${sage_femme.prenom}`;
 
-  const enfant_french_date_format = getDateYYYMMDD(
-    new Date(enfant.date_nais)
-  );
-  const date_now = formatDateToFrench(getTodayYYYYMMDD());
+  const enfant_french_date_format = formatDateToFR(new Date(enfant.date_nais));
+
+  const date_now = formatDateToFR(new Date());
   const date_now_malagasy = formatDateToMalagasy(new Date());
   const heure_nais = formatHeureToMalagasy(new Date(enfant.date_nais));
   const long_sexe = enfant.sexe === "M" ? 'zazalahy' : 'zazavavy';
-  console.log(date_now);
   // Load HTML file
   const htmlPath = path.join(
     __dirname,

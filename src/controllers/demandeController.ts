@@ -6,29 +6,66 @@ import * as notificationService from "../sevices/notificaitonService"
 import { randomUUID } from "crypto";
 import { uploadFileToSupabase } from "../utils/uploadToSupabase";
 import generatePDF from "../utils/generatePDF";
+import { supabase } from "../lib/supabaseClient";
+import { v4 as uuid } from "uuid";
 
 export async function createPDF(req: Request, res: Response) {
   try {
+		// Check the id
+		const id_demande = Number(req.params.id);
+		if (isNaN(id_demande)) {
+			return res.status(400).json({ message: "Id invalid" });
+    }
     
-    let enfant = req.body.enfant;
-    let pere = req.body.pere;
-    let mere = req.body.mere;
-    let sage_femme = req.body.sage_femme;
+    console.log('id', id_demande);
 
+		let enfant = req.body.enfant;
+		let pere = req.body.pere;
+		let mere = req.body.mere;
+		let sage_femme = req.body.sage_femme;
 
+		const pdfBuffer = await generatePDF(enfant, pere, mere, sage_femme);
 
-    const pdfBuffer = await generatePDF(enfant, pere, mere, sage_femme);
+		// 2. Create unique filename
+		const filename = `acte_naissance_${uuid()}.pdf`;
 
-    // Send PDF
-    res.set({
-      "Content-Type": "application/pdf",
-      "Content-Disposition": "attachment; filename=document.pdf",
-      "Content-Length": pdfBuffer.length,
-    });
+		// 3. Upload to Supabase Storage
+		const { data: uploadData, error: uploadError } = await supabase.storage
+			.from("images")
+			.upload(filename, pdfBuffer, {
+				contentType: "application/pdf",
+				upsert: false,
+			});
 
-    res.send(pdfBuffer);
+		if (uploadError) {
+			console.error(uploadError);
+			return res.status(500).json({ error: "Upload to Supabase failed" });
+		}
 
-  } catch (error) {
+		// 4. Get public URL or signed URL
+		const { data: publicUrlData } = supabase.storage
+			.from("images")
+			.getPublicUrl(filename);
+
+		const fileUrl = publicUrlData.publicUrl;
+    console.log(fileUrl);
+		// 5. Save file metadata into PostgreSQL
+		const meta = await documentService.addDocument([
+			{
+				nom_fichier: filename,
+				chemin_fichier: fileUrl,
+				type_fichier: "application/pdf",
+				demande_id: id_demande, 
+				role_fichier: "document_final"
+			},
+		]);
+
+		// 6. Return link to client
+		return res.json({
+			message: "Acte de naissance créée",
+			fichier: meta,
+		});
+	} catch (error) {
     console.error(error);
     res.status(500).json({error});
   }
