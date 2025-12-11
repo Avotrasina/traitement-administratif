@@ -5,7 +5,35 @@ import * as documentService from "../sevices/documentService";
 import * as notificationService from "../sevices/notificaitonService"
 import { randomUUID } from "crypto";
 import { uploadFileToSupabase } from "../utils/uploadToSupabase";
-const multer = configurationStorage();
+import generatePDF from "../utils/generatePDF";
+
+export async function createPDF(req: Request, res: Response) {
+  try {
+    
+    let enfant = req.body.enfant;
+    let pere = req.body.pere;
+    let mere = req.body.mere;
+    let sage_femme = req.body.sage_femme;
+
+
+
+    const pdfBuffer = await generatePDF(enfant, pere, mere, sage_femme);
+
+    // Send PDF
+    res.set({
+      "Content-Type": "application/pdf",
+      "Content-Disposition": "attachment; filename=document.pdf",
+      "Content-Length": pdfBuffer.length,
+    });
+
+    res.send(pdfBuffer);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({error});
+  }
+}
+
 
 // Lister toutes les demandes
 export async function getAllDemandes(req: Request, res: Response) {

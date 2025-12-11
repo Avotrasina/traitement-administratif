@@ -1,0 +1,33 @@
+{
+	"enfant": {
+		"nom": "AVOTRASINA",
+		"prenom": "Fiéldo",
+		"date_nais": "2025-05-28 14:12:20",
+		"lieu_nais": "ANDROVA Mahajanga",
+		"sexe": "M"
+	},
+	"pere": {
+		"nom": "SAIDIBARY",
+		"prenom": "Fidèle",
+		"lieu_nais": "Besarety",
+		"date_nais": "19-12-1953",
+		"profession": "Ingénieur",
+		"adresse": "Ampahibe"
+	},
+	"mere": {
+		"nom": "ZAFILAFY",
+		"prenom": "Jeanine",
+		"date_nais": "07-07-1977",
+		"lieu_nais": "Mahajanga",
+		"profession": "Commercante",
+		"adresse": "Ampahibe"
+	},
+	"sage_femme": {
+		"nom": "RAKOTONIRINA",
+		"prenom": "Sarah",
+		"date_nais": "18-03-1998",
+		"adresse": "Androva"
+	}
+}
+
+

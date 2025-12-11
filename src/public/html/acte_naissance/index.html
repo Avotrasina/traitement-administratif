@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>KOPIAN'N SORA-PIANKOHONANA</title>
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+  <article class="paper">
+    <header class="header">
+      <div class="left-head">
+        <div class="slogan">Tanindrazana - Fahafahana - Fandrosoana</div>
+        <div class="">
+          <span>
+            ----------------------------------
+          </span>
+          <div class="city">FIANARANTSOA</div>
+          <span>
+            ----------------------------------
+          </span>
+          <div>Commune Urbaine de<br/>FIANARANTSOA</div>
+        </div>
+      </div>
+
+      <div class="right-box">
+        <div style="font-weight:700; font-size:12px">Teny midina laharana faha-788-MI/CAB</div>
+        <div style="font-size:11px;margin-top:2px">tamin'ny 29 desambra 1961 nataoan'ny<br/>Minisitry ny Fitsarana</div>
+      </div>
+    </header>
+
+    
+    <section class="body">
+      <aside class="meta">
+        <div>
+          <div class="label">Laharana : 2225///</div>
+          <div class="small">Tamin'ny : {{date_now}}</div>
+        </div>
+        <div>
+          <div class="label">Fahaterahana</div>
+          <div class="small">{{enfant.nom_complet}}</div>
+        </div>
+        <div class="small">Teraka:{{enfant.date_nais}}///</div>
+        <div>
+          <div class="label">Kopia voalohany</div>
+          <div class="label extra">soratra an-tsisiny</div>
+        </div>
+      </aside>
+      
+      <div class="main">
+        <h1 class="title">KOPIAN'NY SORA-PIANKOHONANA</h1>
+        <div class="content">
+          <!-- Paragraphe 1 -->
+          <p>Nalaina tamin'ny bokim-piankohonana, taona roa amby folo sy roa arivo, voatanty<br/>ato amin'ny Commune Urbaine de Fianarantsoa, izao soratra manaraka izao:</p>
+          <!-- Paragraphe 2 -->
+          <p>Tamin'ny fotoana {{enfant.date_nais_malagasy}}, tamin'ny {{enfant.heure_nais_malagasy}}, no teraka tao amin'ny {{enfant.lieu_nais}} i {{enfant.nom_complet}}, {{enfant.sexe_malagasy}}, zanak'i {{pere.nom_complet}}, {{pere.profession}}, teraka tamin'ny {{pere.date_nais_malagasy}} tao {{pere.lieu_nais}} sy {{mere.nom_complet}}, vady, {{mere.profession}}, teraka tamin'ny {{mere.date_nais_malagasy}} tao {{mere.lieu_nais}}, monina ao {{mere.adresse}}.</p>
+          <!-- Paragraphe 3 -->
+          <p>Nosoratana androany {{date_now_malagasy}} tamin'ny valo ora maraina, araka ny fanambarana nataon'i {{sage_femme.nom_complet}}...
+          Mpampivelona, teraka tamin'ny {{sage_femme.date_nais_malagasy}} tao {{sage_femme.lieu_nais}} monina ao {{sage_femme.adresse}}, izay miasa manao sonia aminay, RAKOTONAIANA Pety,
+            Filohan'ny Delegasiona Manokana, mpandraikitra ny sora-piankohonana ao amin'ny Commune Urbaine de Fianarantsoa, rehefa novakiana taminy ity soratra ity.
+          </p>
+        </div>
+
+        <div class="footer">
+          <div>
+            <h3>- Manaraka ny sonia <br/>
+            Kopia manontolo nadika tamin'ny boky androany: <span>{{date_now}}</span>
+            </h3>
+          </div>
+          <p>NY MPIANDRAIKITRA NY SORA-PIANKOHONANA</p>
+        </div>
+
+      </div>
+
+
+    </section>
+    
+    <div class="signature">
+      RAHARISON Jean Bruno Xavier
+    </div>
+    
+  </article>
+</body>
+</html>
