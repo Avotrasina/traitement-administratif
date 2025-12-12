@@ -1,25 +1,29 @@
-import fs from "fs";
 import { supabase } from "../lib/supabaseClient";
 
 export async function uploadFileToSupabase(
 	file: Express.Multer.File,
-	folder: string
+	filePath: string
 ) {
-	const fileBuffer = fs.readFileSync(file.path);
-
-	const fileName = `${folder}/${file.filename}`;
+	if (!file || !file.buffer) {
+		throw new Error("File buffer is missing.");
+	}
 
 	const { data, error } = await supabase.storage
 		.from(process.env.SUPABASE_BUCKET!)
-		.upload(fileName, fileBuffer, {
+		.upload(filePath, file.buffer, {
 			contentType: file.mimetype,
 			upsert: false,
 		});
 
-	// Delete local file
-	fs.unlinkSync(file.path);
+	if (error) {
+		console.error("Supabase upload error:", error);
+		throw new Error(error.message);
+	}
 
-	if (error) throw new Error(error.message);
+	// Retrieve the public URL
+	const { data: publicUrlData } = supabase.storage
+		.from(process.env.SUPABASE_BUCKET!)
+		.getPublicUrl(filePath);
 
-	return `${process.env.SUPABASE_URL}/storage/v1/object/public/${process.env.SUPABASE_BUCKET}/${fileName}`;
+	return publicUrlData.publicUrl;
 }
