@@ -120,7 +120,8 @@ export async function addDemande(req: Request, res: Response) {
       qr_code
     });
 
-    const fichiers = req.files as Express.Multer.File[] | undefined ;
+    const fichiers = req.files as Express.Multer.File[] | undefined;
+    console.log(fichiers);
     if (!fichiers) {
       return res.status(400).json({message: "Les documents sont requis"});
     }
